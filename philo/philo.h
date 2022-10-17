@@ -29,6 +29,4 @@ typedef struct philo
     struct timeval start_t;
     struct philo *next;
 } t_philo;
-
-
 #endif
