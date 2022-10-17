@@ -50,12 +50,7 @@ void *routine(void *philoarg)
     {
         if(!(philo.fork) && !(philo.next->fork))
             eat(philo);
-
     }
-    // philo->fork = 1;
-    // philo->next->fork = 1;
-    // eat()
-    // sleep()    
     pthread_exit(NULL);    
 
 }
@@ -76,13 +71,12 @@ void *sleep(t_philo *philo)
 void *eat(t_philo *philo)
 {
     struct timeval tv;
-    // t_philo *philo;
     
-    // philo = (t_philo *) philoarg;
     philo->fork=1;
     philo->next->fork=1;
     gettimeofday(&philo->start_t, NULL);
-            printf(" Philosopher : %d \n",philo->id);
+    printf("%d %d has taken a fork \n",philo->start_t,philo->id);
+    printf("%d %d is eating \n",philo->start_t,philo->id);
 
     while (tv.tv_usec <= (philo->start_t.tv_usec + (philo->time_to_eat * 1000)))
     {
@@ -90,11 +84,13 @@ void *eat(t_philo *philo)
     }
     //time to die will be full
     //check is_sleep fork
-    philo->is_sleep = 1;
-    sleep(philo);
-    philo->time_to_die = philo->time_to_die - philo->time_to_sleep; // reduces the sleeping time
     philo->fork = 0;
     philo->next->fork = 0;
+    philo->is_sleep = 1;
+    printf("%d %d is sleeping \n",philo->start_t,philo->id);
+    sleep(philo);
+    philo->time_to_die = philo->time_to_die - philo->time_to_sleep; // reduces the sleeping time
+    printf("%d %d is thinking \n",philo->start_t,philo->id);
 }
 
 // no of phil , time to die , tte,time to sleep , number of time each philosopher should eat
