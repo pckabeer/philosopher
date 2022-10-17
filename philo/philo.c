@@ -48,7 +48,7 @@ void *routine(void *philoarg)
     philo = (t_philo *) philoarg;
     while(1)
     {
-        
+        eat(philo);
     }
     // philo->fork = 1;
     // philo->next->fork = 1;
