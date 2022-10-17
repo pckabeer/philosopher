@@ -10,7 +10,12 @@
 #include <sys/time.h>
 
 
+/*
+    is_sleep - when the philosopher is sleeping
+    fork 
+    thinking - when is_sleep and fork is 0;
 
+*/
 
 typedef struct philo
 {
@@ -19,10 +24,10 @@ typedef struct philo
     int time_to_eat;
     int time_to_sleep;
     int fork;
+    int is_sleep;
     pthread_t thread;
     struct timeval start_t;
     struct philo *next;
-    
 } t_philo;
 
 

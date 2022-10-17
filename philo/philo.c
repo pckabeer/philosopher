@@ -34,20 +34,34 @@ void init_philo(t_philo *philo, char **argv )
     printf("Philo Generated : %d\n",i);
 
 }
-void *print_philo(void *philoarg)
+
+void print_philo(void *philoarg)
 {
     //print philo 
 }
-void *routine(void *philoarg)
-{
 
-}
-void *eat(void *philoarg)
+void *routine(void *philoarg)
 {
     struct timeval tv;
     t_philo *philo;
     
     philo = (t_philo *) philoarg;
+    while(1)
+    {
+        
+    }
+    // philo->fork = 1;
+    // philo->next->fork = 1;
+    // eat()
+    // sleep()
+}
+
+void *eat(t_philo *philo)
+{
+    struct timeval tv;
+    // t_philo *philo;
+    
+    // philo = (t_philo *) philoarg;
     philo->fork=1;
     philo->next->fork=1;
     gettimeofday(&philo->start_t, NULL);
@@ -73,7 +87,7 @@ int main(int argc, char *argv[])
     i = -1;
     init_philo(philo, argv);
         while(++i<atoi(argv[1]))
-            pthread_create(&philo[i].thread, NULL, eat, (void *) &philo[i]);
+            pthread_create(&philo[i].thread, NULL, routine, (void *) &philo[i]);
 
         // if(!(philo[0].fork)&&!(philo[0].next->fork))
         // if(!(philo[1].fork)&&!(philo[1].next->fork))
@@ -85,7 +99,6 @@ int main(int argc, char *argv[])
     while (1)
     { 
         // check death
-        i++;    
     }
        
     
