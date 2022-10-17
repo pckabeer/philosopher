@@ -62,7 +62,14 @@ void *routine(void *philoarg)
 
 void *sleep(t_philo *philo)
 {
+    struct timeval tv;
+    
+    gettimeofday(&philo->start_t, NULL);
+    printf(" Philosopher : %d \n",philo->id);
+    while (tv.tv_usec <= (philo->start_t.tv_usec + (philo->time_to_sleep * 1000)))
+        gettimeofday(&tv, NULL);
 }
+
 /*
     Function finishes eat and sleep then comes out
 */
