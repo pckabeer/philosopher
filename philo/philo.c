@@ -65,20 +65,20 @@ int main(int argc, char *argv[])
     philo = malloc(sizeof(*philo) * atoi(argv[1]));
     i = 0;
     init_philo(philo, argv);
-    while (1)
-    {
-        if(!(philo[0].fork)&&!(philo[0].next->fork))
+        // if(!(philo[0].fork)&&!(philo[0].next->fork))
             pthread_create(&philo[0].thread, NULL, eat, (void *) &philo[0]);
-        if(!(philo[1].fork)&&!(philo[1].next->fork))
+        // if(!(philo[1].fork)&&!(philo[1].next->fork))
             pthread_create(&philo[1].thread, NULL, eat, (void *) &philo[1]);
-        if(!(philo[2].fork)&&!(philo[2].next->fork))
+        // if(!(philo[2].fork)&&!(philo[2].next->fork))
             pthread_create(&philo[2].thread, NULL, eat, (void *) &philo[2]);
-        if(!(philo[3].fork)&&!(philo[3].next->fork))
+        // if(!(philo[3].fork)&&!(philo[3].next->fork))
             pthread_create(&philo[3].thread, NULL, eat, (void *) &philo[3]);
-        
+    while (1)
+    { 
+        // check death
         i++;    
-       // printf(" %d \n",i);
     }
+       
     
 
 
