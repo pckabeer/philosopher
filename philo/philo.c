@@ -34,7 +34,14 @@ void init_philo(t_philo *philo, char **argv )
     printf("Philo Generated : %d\n",i);
 
 }
+void *print_philo(void *philoarg)
+{
+    //print philo 
+}
+void *routine(void *philoarg)
+{
 
+}
 void *eat(void *philoarg)
 {
     struct timeval tv;
@@ -63,16 +70,18 @@ int main(int argc, char *argv[])
     int i;
 
     philo = malloc(sizeof(*philo) * atoi(argv[1]));
-    i = 0;
+    i = -1;
     init_philo(philo, argv);
+        while(++i<atoi(argv[1]))
+            pthread_create(&philo[i].thread, NULL, eat, (void *) &philo[i]);
+
         // if(!(philo[0].fork)&&!(philo[0].next->fork))
-            pthread_create(&philo[0].thread, NULL, eat, (void *) &philo[0]);
         // if(!(philo[1].fork)&&!(philo[1].next->fork))
-            pthread_create(&philo[1].thread, NULL, eat, (void *) &philo[1]);
+            // pthread_create(&philo[1].thread, NULL, eat, (void *) &philo[1]);
         // if(!(philo[2].fork)&&!(philo[2].next->fork))
-            pthread_create(&philo[2].thread, NULL, eat, (void *) &philo[2]);
+            // pthread_create(&philo[2].thread, NULL, eat, (void *) &philo[2]);
         // if(!(philo[3].fork)&&!(philo[3].next->fork))
-            pthread_create(&philo[3].thread, NULL, eat, (void *) &philo[3]);
+            // pthread_create(&philo[3].thread, NULL, eat, (void *) &philo[3]);
     while (1)
     { 
         // check death
