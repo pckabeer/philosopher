@@ -24,7 +24,8 @@ typedef struct philo
     int time_to_eat;
     int time_to_sleep;
     int fork;
-	int life;
+	long life;
+	int is_dead;
     int is_sleep;
     pthread_t thread;
 	pthread_mutex_t lock;
