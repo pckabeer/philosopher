@@ -6,11 +6,32 @@
 /*   By: kpanikka <kpanikka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 21:18:07 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/10/18 11:44:58 by kpanikka         ###   ########.fr       */
+/*   Updated: 2022/10/18 21:29:27 by kpanikka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+/*
+timestamp for current time witgh the diffrence of philo started
+*/
+long n_timestamp(struct timeval *time)
+{
+	struct timeval n_time;
+	
+	gettimeofday(&n_time, NULL);
+	return (((n_time.tv_sec - time->tv_sec)*1000) + 
+		((n_time.tv_usec - time->tv_usec)/1000));
+}
+
+size_t timestamp_new()
+{
+	struct timeval n_time;
+	
+	gettimeofday(&n_time, NULL);
+	
+	 return ((n_time.tv_sec*1000000)+ (n_time.tv_usec));
+	//return ((n_time.tv_sec)+ (n_time.tv_usec));
+}
 
 void init_philo(t_philo *philo, char **argv )
 {
@@ -20,39 +41,33 @@ void init_philo(t_philo *philo, char **argv )
     while (i < atoi(argv[1]))
     {
         philo[i].fork = 0;
-        philo[i].id = i;
+        philo[i].id = i + 1;
         philo[i].time_to_die = atoi(argv[2]);
         philo[i].life = atoi(argv[2]);
         philo[i].time_to_sleep = atoi(argv[4]);
         philo[i].time_to_eat = atoi(argv[3]);
-		gettimeofday(&philo->life_t, NULL);
-			if (i == (atoi(argv[1])-1))
+		gettimeofday(&philo[i].life_t, NULL);
+		philo[i].life = n_timestamp(&philo[i].life_t);
+		if (i == (atoi(argv[1])-1))
             philo[i].next = &philo[0];
         else
             philo[i].next = &philo[i+1];
-        
         i++;
     }
-    printf("Philo Generated : %d\n",i);
-
-}
-
-void print_philo(void *philoarg)
-{
-    //print philo 
 }
 
 void ft_sleep(t_philo *philo)
 {
-    struct timeval tv;
-    
-    gettimeofday(&philo->start_t, NULL);
-    // while (tv.tv_sec <= (philo->start_t.tv_sec + (philo->time_to_sleep * 1000)))
-    // {
-	// 	printf("hi --- \n");
-	//     gettimeofday(&tv, NULL);
-	// }
-	usleep(philo->time_to_sleep*1000);
+	size_t ts;
+	size_t target;
+	
+	ts =timestamp_new();
+	target = ts +(philo->time_to_sleep*1000);
+	 while (ts < target)
+	 {
+		ts =timestamp_new();
+		usleep(350);
+	 }
 }
 
 
@@ -61,36 +76,36 @@ void ft_sleep(t_philo *philo)
 */
 void eat(t_philo *philo)
 {
-    struct timeval tv;
-    
 	philo->fork=1;
     philo->next->fork=1;
     pthread_mutex_unlock(&philo->lock);
 	pthread_mutex_unlock(&philo->next->lock);
-    gettimeofday(&philo->start_t, NULL);
-    printf("%ld %d has taken a fork \n",philo->start_t.tv_sec,philo->id);
-    printf("%ld %d is eating \n",philo->start_t.tv_sec,philo->id);
+    printf("%ld %d has taken a fork \n",n_timestamp(&philo->life_t),philo->id);
+    printf("%ld %d is eating \n",n_timestamp(&philo->life_t),philo->id);
 
-	usleep(philo->time_to_eat*1000);
 
-    // while (tv.tv_usec <= (philo->start_t.tv_usec + (philo->time_to_eat * 1000)))
-    // {
-    //     gettimeofday(&tv, NULL);
-    // }
-    //time to die will be full
+	size_t ts,target;
+	ts = timestamp_new();
+	target = ts +(philo->time_to_eat*1000);
+	 while (ts < target)
+	 {
+		ts = timestamp_new();
+		usleep(350);
+	 }
+	 
     //check is_sleep fork
 	pthread_mutex_lock(&philo->lock);
 	pthread_mutex_lock(&philo->next->lock);
     philo->fork = 0;
     philo->next->fork = 0;
 	//philo->life = philo->time_to_die;
-	gettimeofday(&philo->life_t, NULL);
+	philo->life = n_timestamp(&philo->life_t);
 
-    printf("%ld %d is sleeping \n",philo->start_t.tv_sec,philo->id);
+    printf("%ld %d is sleeping \n",n_timestamp(&philo->life_t),philo->id);
     ft_sleep(philo);
     //philo->time_to_die = philo->time_to_die - philo->time_to_sleep; // reduces the sleeping time
 	//philo->life =// philo->time_to_die - philo->time_to_sleep;
-    printf("%ld %d is thinking \n",philo->start_t.tv_sec,philo->id);
+    printf("%ld %d is thinking \n",n_timestamp(&philo->life_t),philo->id);
 }
 
 void *routine(void *philoarg)
@@ -116,11 +131,48 @@ void *routine(void *philoarg)
 			
 		pthread_mutex_unlock(&philo->lock);
 		pthread_mutex_unlock(&philo->next->lock);
+		usleep(350);
     }
     pthread_exit(NULL);
 
 }
 
+void kill_all(t_philo *philos,int no_phil)
+{
+	int i;
+
+	i = -1;
+	while (++i < no_phil)
+		{
+			if (!philos[i].is_dead)
+			{
+				philos[i].is_dead = 1;
+				//printf("%ld %d died \n",n_timestamp(&philos[i].life_t),philos[i].id);
+			}
+			
+		}
+		// free variables
+				// free mutex
+				// exit program
+				exit(1);
+	
+}
+
+int is_dead(t_philo  *philo)
+{
+	long n_time;
+
+	//printf(" -- Is died -- \n");
+	n_time = n_timestamp(&philo->life_t);
+	if (n_time - philo->life > (philo->time_to_die))
+	{
+		printf("%ld %d died \n",n_timestamp(&philo->life_t),philo->id);
+		philo->is_dead = 1;
+		return 1;
+	}
+	
+	return 0;
+}
 // no of phil , time to die , tte,time to sleep , number of time each philosopher should eat
 
 int main(int argc, char *argv[]) 
@@ -128,24 +180,25 @@ int main(int argc, char *argv[])
     t_philo	*philo;
     int		i;
 
-	printf("hi \n");
     philo = malloc(sizeof(t_philo) * atoi(argv[1]));
     i = -1;
     init_philo(philo, argv);
         while(++i<atoi(argv[1]))
             pthread_create(&philo[i].thread, NULL, routine, (void *) &philo[i]);
-    i = -1;
-
     while (1)
     { 
-        // check death0
+		i = -1;
+        // check death0.
+				usleep(500);
+
 		while (++i<atoi(argv[1]))
 		{
-			// check for death of each 
-			// print the death message
-			// free variables
-			// free mutex
-			// if died exi the program
+			if(is_dead(&philo[i]))
+			{
+				//kill all philo
+				kill_all(philo,atoi(argv[1]));
+				
+			}
 		}
 		
     }
