@@ -24,9 +24,12 @@ typedef struct philo
     int time_to_eat;
     int time_to_sleep;
     int fork;
+	int life;
     int is_sleep;
     pthread_t thread;
+	pthread_mutex_t lock;
     struct timeval start_t;
+    struct timeval life_t;
     struct philo *next;
 } t_philo;
 #endif
