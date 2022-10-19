@@ -116,11 +116,18 @@ void eat(t_philo *philo)
 
     printf("%ld %d is sleeping \n",n_timestamp(&philo->life_t),philo->id);
     ft_sleep(philo);
-    //philo->time_to_die = philo->time_to_die - philo->time_to_sleep; // reduces the sleeping time
-	//philo->life =// philo->time_to_die - philo->time_to_sleep;
     printf("%ld %d is thinking \n",n_timestamp(&philo->life_t),philo->id);
 }
-
+/*
+	check if the m_fork is set to te id of the calling philosopher
+	returns zero if any of the m_forks has the philosophers id 
+*/
+int fork_mask(t_philo *philo)
+{
+	if(philo->m_fork == philo->id || philo->next->m_fork == philo->id)
+		return(0);
+	return 1;
+}
 void *routine(void *philoarg)
 {
     struct timeval tv;
@@ -140,7 +147,7 @@ void *routine(void *philoarg)
 		pthread_mutex_lock(&philo->lock);
 		}
 		
-        if(!(philo->fork) && !(philo->next->fork) && philo->rounds)
+        if(!(philo->fork) && !(philo->next->fork) && philo->rounds && fork_mask(philo))
             eat(philo);
 			
 		pthread_mutex_unlock(&philo->lock);
