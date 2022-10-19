@@ -85,6 +85,7 @@ void eat(t_philo *philo)
     pthread_mutex_unlock(&philo->lock);
 	pthread_mutex_unlock(&philo->next->lock);
     printf("%ld %d has taken a fork \n",n_timestamp(&philo->life_t),philo->id);
+    printf("%ld %d has taken a fork \n",n_timestamp(&philo->life_t),philo->id);
     printf("%ld %d is eating \n",n_timestamp(&philo->life_t),philo->id);
 
 
