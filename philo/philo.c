@@ -45,7 +45,7 @@ void init_philo(t_philo *philo, char **argv )
         //philo[i].life = atoi(argv[2]);
         philo[i].time_to_sleep = atoi(argv[4]);
 		if(atoi(argv[5]))
-			philo[i].rounds; = atoi(argv[5]);
+			philo[i].rounds = atoi(argv[5]);
 		else
 			philo[i].rounds = -1;
         philo[i].time_to_eat = atoi(argv[3]);
