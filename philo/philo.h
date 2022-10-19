@@ -18,7 +18,12 @@
 
 typedef struct info
 {
-int p_dead;
+	int p_dead;
+	int no_phil;
+	pthread_mutex_t dlock;
+	pthread_mutex_t print_lock;
+	int p_lock;
+
 }t_info;
 typedef struct philo
 {
@@ -40,4 +45,9 @@ typedef struct philo
     struct info *key;
     
 } t_philo;
+
+ int is_dead(t_philo  *philo);
+ void ft_muteall(t_philo  *philo,int flag);
+void print_info(t_philo  *philo,int print_order);
+
 #endif
