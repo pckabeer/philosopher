@@ -31,7 +31,7 @@ size_t timestamp_new()
 	return ((n_time.tv_sec * 1000000)+ (n_time.tv_usec));
 }
 
-void init_philo(t_philo *philo, char **argv )
+void init_philo(t_philo *philo, int argc, char **argv )
 {
     int i;
 
@@ -44,7 +44,7 @@ void init_philo(t_philo *philo, char **argv )
         philo[i].time_to_die = atoi(argv[2]);
         //philo[i].life = atoi(argv[2]);
         philo[i].time_to_sleep = atoi(argv[4]);
-		if(atoi(argv[5]))
+		if(argc == 6)
 			philo[i].rounds = atoi(argv[5]);
 		else
 			philo[i].rounds = -1;
@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
 
     philo = malloc(sizeof(t_philo) * atoi(argv[1]));
     i = -1;
-    init_philo(philo, argv);
+    init_philo(philo,argc, argv);
 	while(++i<atoi(argv[1]))
 		pthread_create(&philo[i].thread, NULL, routine, (void *) &philo[i]);
     while (1)
