@@ -155,7 +155,6 @@ void *routine(void *philoarg)
 		pthread_mutex_unlock(&philo->next->lock);
 		//usleep(350);
     }
-    pthread_exit(NULL);
 
 }
 
@@ -201,8 +200,13 @@ int main(int argc, char *argv[])
     int		i;
 
     philo = malloc(sizeof(t_philo) * atoi(argv[1]));
-    i = -1;
     init_philo(philo,argc, argv);
+	if (atoi(argv[1] < 1)
+	{
+		printf("%ld %d died \n",n_timestamp(philo[0]->life_t),philo[0]->id);
+		return (0);
+	}
+    i = -1;
 	while(++i<atoi(argv[1]))
 		pthread_create(&philo[i].thread, NULL, routine, (void *) &philo[i]);
     while (1)
