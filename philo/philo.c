@@ -201,9 +201,9 @@ int main(int argc, char *argv[])
 
     philo = malloc(sizeof(t_philo) * atoi(argv[1]));
     init_philo(philo,argc, argv);
-	if (atoi(argv[1] < 1)
+	if (atoi(argv[1]) == 1)
 	{
-		printf("%ld %d died \n",n_timestamp(philo[0]->life_t),philo[0]->id);
+		printf("%ld %d died \n",n_timestamp(&philo[0].life_t),philo[0].id);
 		return (0);
 	}
     i = -1;
