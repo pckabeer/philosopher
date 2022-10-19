@@ -112,6 +112,7 @@ void eat(t_philo *philo)
     philo->next->fork = 0;
 	//philo->life = philo->time_to_die;
 	philo->life = n_timestamp(&philo->life_t);
+	philo->rounds--;
 
     printf("%ld %d is sleeping \n",n_timestamp(&philo->life_t),philo->id);
     ft_sleep(philo);
