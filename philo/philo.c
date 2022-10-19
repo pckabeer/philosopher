@@ -6,7 +6,7 @@
 /*   By: kpanikka <kpanikka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 21:18:07 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/10/18 21:29:27 by kpanikka         ###   ########.fr       */
+/*   Updated: 2022/10/19 10:16:11 by kpanikka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ size_t timestamp_new()
 	struct timeval n_time;
 	
 	gettimeofday(&n_time, NULL);
-	
-	 return ((n_time.tv_sec*1000000)+ (n_time.tv_usec));
-	//return ((n_time.tv_sec)+ (n_time.tv_usec));
+	return ((n_time.tv_sec * 1000000)+ (n_time.tv_usec));
 }
 
 void init_philo(t_philo *philo, char **argv )
@@ -40,10 +38,11 @@ void init_philo(t_philo *philo, char **argv )
     i = 0;
     while (i < atoi(argv[1]))
     {
-        philo[i].fork = 0;
+		philo[i].fork = 0;
+        philo[i].m_fork = 0;
         philo[i].id = i + 1;
         philo[i].time_to_die = atoi(argv[2]);
-        philo[i].life = atoi(argv[2]);
+        //philo[i].life = atoi(argv[2]);
         philo[i].time_to_sleep = atoi(argv[4]);
         philo[i].time_to_eat = atoi(argv[3]);
 		gettimeofday(&philo[i].life_t, NULL);
@@ -66,10 +65,9 @@ void ft_sleep(t_philo *philo)
 	 while (ts < target)
 	 {
 		ts =timestamp_new();
-		usleep(350);
+		//usleep(350);
 	 }
 }
-
 
 /*
     Function finishes eat and ft_sleep then comes out
@@ -78,6 +76,8 @@ void eat(t_philo *philo)
 {
 	philo->fork=1;
     philo->next->fork=1;
+	philo->m_fork = philo->id;
+	philo->next->m_fork = philo->id;
     pthread_mutex_unlock(&philo->lock);
 	pthread_mutex_unlock(&philo->next->lock);
     printf("%ld %d has taken a fork \n",n_timestamp(&philo->life_t),philo->id);
@@ -90,12 +90,20 @@ void eat(t_philo *philo)
 	 while (ts < target)
 	 {
 		ts = timestamp_new();
-		usleep(350);
+		//usleep(350);
 	 }
 	 
     //check is_sleep fork
-	pthread_mutex_lock(&philo->lock);
-	pthread_mutex_lock(&philo->next->lock);
+	if(!philo->id%2)
+	{
+		pthread_mutex_lock(&philo->lock);
+		pthread_mutex_lock(&philo->next->lock);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->next->lock);
+		pthread_mutex_lock(&philo->lock);
+	}
     philo->fork = 0;
     philo->next->fork = 0;
 	//philo->life = philo->time_to_die;
@@ -116,7 +124,7 @@ void *routine(void *philoarg)
     philo = (t_philo *) philoarg;
     while(1)
     {
-		if(philo->id%2)
+		if(!philo->id%2)
 		{
 		pthread_mutex_lock(&philo->lock);
 		pthread_mutex_lock(&philo->next->lock);
@@ -126,12 +134,13 @@ void *routine(void *philoarg)
 		pthread_mutex_lock(&philo->next->lock);
 		pthread_mutex_lock(&philo->lock);
 		}
+		
         if(!(philo->fork) && !(philo->next->fork))
             eat(philo);
 			
 		pthread_mutex_unlock(&philo->lock);
 		pthread_mutex_unlock(&philo->next->lock);
-		usleep(350);
+		//usleep(350);
     }
     pthread_exit(NULL);
 
@@ -162,7 +171,6 @@ int is_dead(t_philo  *philo)
 {
 	long n_time;
 
-	//printf(" -- Is died -- \n");
 	n_time = n_timestamp(&philo->life_t);
 	if (n_time - philo->life > (philo->time_to_die))
 	{
@@ -170,7 +178,6 @@ int is_dead(t_philo  *philo)
 		philo->is_dead = 1;
 		return 1;
 	}
-	
 	return 0;
 }
 // no of phil , time to die , tte,time to sleep , number of time each philosopher should eat
@@ -183,28 +190,16 @@ int main(int argc, char *argv[])
     philo = malloc(sizeof(t_philo) * atoi(argv[1]));
     i = -1;
     init_philo(philo, argv);
-        while(++i<atoi(argv[1]))
-            pthread_create(&philo[i].thread, NULL, routine, (void *) &philo[i]);
+	while(++i<atoi(argv[1]))
+		pthread_create(&philo[i].thread, NULL, routine, (void *) &philo[i]);
     while (1)
     { 
 		i = -1;
-        // check death0.
-				usleep(500);
-
-		while (++i<atoi(argv[1]))
+		//usleep(500);
+		while (++i < atoi(argv[1]))
 		{
-			if(is_dead(&philo[i]))
-			{
-				//kill all philo
+			if (is_dead(&philo[i]))
 				kill_all(philo,atoi(argv[1]));
-				
-			}
 		}
-		
     }
-       
-    
-
-
-
 }
