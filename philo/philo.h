@@ -16,6 +16,10 @@
 
 */
 
+typedef struct info
+{
+int p_dead;
+}t_info;
 typedef struct philo
 {
     int id;
@@ -33,5 +37,7 @@ typedef struct philo
     struct timeval start_t;
     struct timeval life_t;
     struct philo *next;
+    struct info *key;
+    
 } t_philo;
 #endif

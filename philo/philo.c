@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+int g_dead;
 /*
 timestamp for current time witgh the diffrence of philo started
 */
@@ -36,11 +37,17 @@ void init_philo(t_philo *philo, int argc, char **argv )
     int i;
 
     i = 0;
+	t_info t;
+
+	t = malloc(sizeof(t_info) * 1);
+	t.p_dead = 0;
     while (i < atoi(argv[1]))
     {
 		philo[i].fork = 0;
         philo[i].m_fork = 0;
         philo[i].id = i + 1;
+        philo[i].key = t;
+		
         philo[i].time_to_die = atoi(argv[2]);
         //philo[i].life = atoi(argv[2]);
         philo[i].time_to_sleep = atoi(argv[4]);
@@ -137,6 +144,8 @@ void *routine(void *philoarg)
     philo = (t_philo *) philoarg;
     while(1)
     {
+		if(philo->is_dead)
+			break ;
 		if(!philo->id%2)
 		{
 		pthread_mutex_lock(&philo->lock);
@@ -155,7 +164,7 @@ void *routine(void *philoarg)
 		pthread_mutex_unlock(&philo->next->lock);
 		//usleep(350);
     }
-
+			return(NULL);
 }
 
 void kill_all(t_philo *philos,int no_phil)
@@ -175,20 +184,25 @@ void kill_all(t_philo *philos,int no_phil)
 		// free variables
 				// free mutex
 				// exit program
-				exit(1);
+				//exit(1);
 	
 }
 
-int is_dead(t_philo  *philo)
+int is_dead(t_philo  *philo,int no_phil)
 {
+	int i;
 	long n_time;
 
-	n_time = n_timestamp(&philo->life_t);
-	if (n_time - philo->life > (philo->time_to_die))
+	i = -1;
+	while (++i < no_phil)
 	{
-		printf("%ld %d died \n",n_timestamp(&philo->life_t),philo->id);
-		philo->is_dead = 1;
-		return 1;
+		n_time = n_timestamp(&philo[i]->life_t);
+		if (n_time - philo[i]->life > (philo[i]->time_to_die))
+		{
+			printf("%ld %d died \n",n_timestamp(&philo[i]->life_t),philo[i]->id);
+			philo[i]->is_dead = 1;
+			return 1;
+		}
 	}
 	return 0;
 }
@@ -213,10 +227,14 @@ int main(int argc, char *argv[])
     { 
 		i = -1;
 		//usleep(500);
-		while (++i < atoi(argv[1]))
-		{
-			if (is_dead(&philo[i]))
-				kill_all(philo,atoi(argv[1]));
-		}
+		// while (++i < atoi(argv[1]))
+		// {
+			if (is_dead(&philo,atoi(argv[1]))
+				break ;
+				//kill_all(philo,atoi(argv[1]));
+		// }
     }
+    i = -1;
+	while(++i<atoi(argv[1]))
+		pthread_join(&philo[i].thread, NULL);
 }
