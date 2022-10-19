@@ -6,7 +6,6 @@
 # include <stdio.h>
 # include <fcntl.h>
 #include <pthread.h>
-#include <pthread.h>
 #include <sys/time.h>
 
 
