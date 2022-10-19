@@ -23,6 +23,7 @@ typedef struct philo
     int time_to_die;
     int time_to_eat;
     int time_to_sleep;
+    int rounds;
     int fork;
     int m_fork;
 	long life;
