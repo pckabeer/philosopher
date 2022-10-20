@@ -6,7 +6,7 @@
 /*   By: kpanikka <kpanikka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:01:27 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/10/20 01:00:45 by kpanikka         ###   ########.fr       */
+/*   Updated: 2022/10/20 08:14:46 by kpanikka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct philo
 	int				is_sleep;
 	pthread_t		thread;
 	pthread_mutex_t	lock;
+	pthread_mutex_t	rlock;
 	struct timeval	start_t;
 	struct timeval	life_t;
 	struct philo	*next;
@@ -71,5 +72,6 @@ int		is_dead(t_philo *philo);
 void	ft_muteall(t_philo *philo, int flag);
 int		fork_mask(t_philo *philo);
 void	lock_order(t_philo *philo);
+int		*single_t_sleep(t_philo *philo, int ttime);
 
 #endif
