@@ -91,7 +91,7 @@ void	*routine(void *philoarg)
 		return (single_t_sleep(philo, philo->time_to_die));
 	while (1)
 	{
-		if (is_dead(philo))
+		if (is_dead(philo) || !philo->rounds)
 			break ;
 		lock_order(philo);
 		pthread_mutex_lock(&philo->rlock);
