@@ -29,7 +29,7 @@ size_t	timestamp_new(void)
 	struct timeval	n_time;
 
 	gettimeofday(&n_time, NULL);
-	return ((n_time.tv_sec * 1000000) + (n_time.tv_usec));
+	return ((n_time.tv_sec * 999990) + (n_time.tv_usec));
 }
 
 /*
