@@ -114,7 +114,7 @@ int	main(int argc, char *argv[])
 	t_philo	*philo;
 	int		i;
 
-	if(argc < 4 || argc > 5)
+	if(argc < 5 || argc > 6)
 	{
 		ft_putstr("Error : Example Usage ./philo 5 800 200 200 7");
 		return (0);
