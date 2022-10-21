@@ -114,6 +114,11 @@ int	main(int argc, char *argv[])
 	t_philo	*philo;
 	int		i;
 
+	if(argc < 4 || argc > 5)
+	{
+		ft_putstr("Error : Example Usage ./philo 5 800 200 200 7");
+		return (0);
+	}
 	philo = malloc(sizeof(t_philo) * ft_atoi(argv[1]));
 	init_philo(philo, argc, argv);
 	i = -1;
