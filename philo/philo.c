@@ -116,7 +116,7 @@ int	main(int argc, char *argv[])
 
 	if(argc < 5 || argc > 6)
 	{
-		ft_putstr("Error : Example Usage ./philo 5 800 200 200 7");
+		ft_putstr("Error : Example Usage {./philo 5 800 200 200 7}");
 		return (0);
 	}
 	philo = malloc(sizeof(t_philo) * ft_atoi(argv[1]));
