@@ -1,76 +1,66 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   util1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kpanikka <kpanikka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/19 23:32:40 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/10/20 00:44:08 by kpanikka         ###   ########.fr       */
+/*   Created: 2022/10/19 23:37:32 by kpanikka          #+#    #+#             */
+/*   Updated: 2022/10/22 13:46:52 by kpanikka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_putchar(char c)
+/*
+timestamp for current time witgh the diffrence of philo started
+*/
+long	n_timestamp(struct timeval *time)
 {
-	write(1, &c, 1);
+	struct timeval	n_time;
+
+	gettimeofday(&n_time, NULL);
+	return (((n_time.tv_sec - time->tv_sec) * 1000)
+		+ ((n_time.tv_usec - time->tv_usec) / 1000));
 }
 
-void	ft_putnbr(int n)
+size_t	timestamp_new(void)
 {
-	unsigned int	num;
+	struct timeval	n_time;
 
-	num = n;
-	if (n < 0)
-	{
-		write(1, "-", 1);
-		num = -n;
-	}
-	if (num >= 10)
-		ft_putnbr(num / 10);
-	ft_putchar(num % 10 + '0');
+	gettimeofday(&n_time, NULL);
+	return ((n_time.tv_sec * 999990) + (n_time.tv_usec));
 }
 
-void	ft_putstr(char *s)
+/*
+	check if the m_fork is set to te id of the calling philosopher
+	returns zero if any of the m_forks has the philosophers id 
+*/
+int	fork_mask(t_philo *philo)
 {
-	int	i;
-
-	i = 0;
-	if (!s)
-		return ;
-	while (s[i])
-	{
-		write(1, &s[i], 1);
-		i++;
-	}
-	write(1, "\n", 1);
-}
-
-int	ft_atoi(const char *str)
-{
-	int				i;
-	int				sign;
-	unsigned int	num;
-
-	i = 0;
-	sign = 1;
-	num = 0;
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\r' || str[i] == '\v'
-		|| str[i] == '\n' || str[i] == '\f')
-		i++;
-	if (str[i] == '+' || str[i] == '-')
-	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-		num = num * 10 + str[i++] - '0';
-	if (num >= 2147483648 && sign == 1)
-		return (-1);
-	else if (num > 2147483648 && sign == -1)
+	if (philo->m_fork == philo->id || philo->next->m_fork == philo->id)
 		return (0);
+	return (1);
+}
+
+void	lock_order(t_philo *philo)
+{
+	if (philo->id % philo->key->no_phil)
+	{
+		pthread_mutex_lock(&philo->lock);
+		pthread_mutex_lock(&philo->next->lock);
+	}
 	else
-		return (num * sign);
+	{
+		pthread_mutex_lock(&philo->next->lock);
+		pthread_mutex_lock(&philo->lock);
+	}
+}
+
+void	ft_muteall(t_philo *philo, int lock_flag)
+{
+	if (lock_flag)
+		pthread_mutex_lock(&philo->key->dlock);
+	else
+		pthread_mutex_unlock(&philo->key->dlock);
 }

@@ -6,7 +6,7 @@
 /*   By: kpanikka <kpanikka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:01:27 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/10/20 08:14:46 by kpanikka         ###   ########.fr       */
+/*   Updated: 2022/10/22 13:51:22 by kpanikka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ typedef struct philo
 	int				fork;
 	int				m_fork;
 	long			life;
-	int				is_dead;
-	int				is_sleep;
 	pthread_t		thread;
 	pthread_mutex_t	lock;
 	pthread_mutex_t	rlock;

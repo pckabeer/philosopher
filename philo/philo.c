@@ -6,7 +6,7 @@
 /*   By: kpanikka <kpanikka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 21:18:07 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/10/20 11:12:22 by kpanikka         ###   ########.fr       */
+/*   Updated: 2022/10/22 13:47:05 by kpanikka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ void	*routine(void *philoarg)
 		pthread_mutex_unlock(&philo->lock);
 		pthread_mutex_unlock(&philo->next->lock);
 	}
-
 	return (NULL);
 }
 
@@ -114,7 +113,7 @@ int	main(int argc, char *argv[])
 	t_philo	*philo;
 	int		i;
 
-	if(argc < 5 || argc > 6)
+	if (argc < 5 || argc > 6)
 	{
 		ft_putstr("Error : Example Usage {./philo 5 800 200 200 7}");
 		return (0);
@@ -123,7 +122,11 @@ int	main(int argc, char *argv[])
 	init_philo(philo, argc, argv);
 	i = -1;
 	while (++i < ft_atoi(argv[1]))
+	{
 		pthread_create(&philo[i].thread, NULL, routine, (void *) &philo[i]);
+		if (philo->key->p_dead)
+			break ;
+	}
 	i = -1;
 	while (++i < ft_atoi(argv[1]))
 		pthread_join(philo[i].thread, NULL);
