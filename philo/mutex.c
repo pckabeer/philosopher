@@ -39,16 +39,14 @@ int	*single_t_sleep(t_philo *philo, int ttime)
 	while (ts < target)
 	{
 		n_time = n_timestamp(&philo->life_t);
-		if (n_time - philo->life > (philo->time_to_die))
-		{
-			ft_putnbr(n_timestamp(&philo->life_t));
-			ft_putchar(' ');
-			ft_putnbr(philo->id);
-			ft_putstr(" died");
-			return (NULL);
-		}
+		if ((n_time - philo->life) > (philo->time_to_die))
+			break ;
 		ts = timestamp_new();
 	}
+	ft_putnbr(n_timestamp(&philo->life_t));
+	ft_putchar(' ');
+	ft_putnbr(philo->id);
+	ft_putstr(" died");
 	return (NULL);
 }
 
